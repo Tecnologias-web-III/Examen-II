@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+		package northwind;
+
+		// ---------- Mensajes (estructura de los datos) ----------
+
+		message Category {
+		  int32 CategoryID = 1;
+		  string CategoryName = 2;
+		  string Description = 3;
+		}
+
+		message Product {
+		  int32 ProductID = 1;
+		  string ProductName = 2;
+		  int32 SupplierID = 3;
+		  int32 CategoryID = 4;
+		  string QuantityPerUnit = 5;
+		  double UnitPrice = 6;
+		  int32 UnitsInStock = 7;
+		  int32 ReorderLevel = 8;
+		}
+
+		message Empty {}
+
+		message CategoryList {
+		  repeated Category categories = 1;
+		}
+
+		message ProductList {
+		  repeated Product products = 1;
+		}
+
+		// b) campos especificos
+		message FieldsRequest {
+		  repeated string fields = 1;
+		}
+
+		message Record {
+		  map<string, string> values = 1;
+		}
+
+		message RecordList {
+		  repeated Record records = 1;
+		}
+
+		// c) filtros
+		message FilterRequest {
+		  string field = 1;   // CategoryID, ProductName o UnitPrice_min
+		  string value = 2;
+		}
+
+		// e) eliminar
+		message IdRequest {
+		  int32 id = 1;
+		}
+
+		message Reply {
+		  bool success = 1;
+		  string message = 2;
+		}
+
+		// ---------- Servicio (operaciones disponibles) ----------
+
+		service ProductService {
+		  rpc GetAllCategories (Empty) returns (CategoryList);
+		  rpc GetAllProducts (Empty) returns (ProductList);          // a
+		  rpc GetProductFields (FieldsRequest) returns (RecordList); // b
+		  rpc FilterProducts (FilterRequest) returns (ProductList);  // c
+		  rpc AddProduct (Product) returns (Product);                // e (insertar)
+		  rpc UpdateProduct (Product) returns (Reply);               // e (modificar)
+		  rpc DeleteProduct (IdRequest) returns (Reply);             // e (eliminar)
+		}
