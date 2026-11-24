@@ -60,6 +60,44 @@ syntax = "proto3";
 		  string message = 2;
 		}
 
+		// d) JOIN + agregacion
+		message SalesSummary {
+		  string customerId = 1;
+		  string customerName = 2;
+		  int32 orderCount = 3;
+		  double totalSales = 4;
+		}
+
+		message SalesSummaryList {
+		  repeated SalesSummary summaries = 1;
+		}
+
+		// f) paginacion y ordenamiento
+		message PageRequest {
+		  int32 page = 1;
+		  int32 pageSize = 2;
+		  string sortBy = 3;
+		  string sortOrder = 4;
+		}
+		message ProductPage {
+		  repeated Product products = 1;
+		  int32 page = 2;
+		  int32 pageSize = 3;
+		  int32 total = 4;
+		}
+
+		// g) JWT
+		message LoginRequest {
+		  string username = 1;
+		  string password = 2;
+		}
+
+		message AuthResponse {
+		  bool success = 1;
+		  string token = 2;
+		  string message = 3;
+		}
+
 		// ---------- Servicio (operaciones disponibles) ----------
 
 		service ProductService {
@@ -70,4 +108,7 @@ syntax = "proto3";
 		  rpc AddProduct (Product) returns (Product);                // e (insertar)
 		  rpc UpdateProduct (Product) returns (Reply);               // e (modificar)
 		  rpc DeleteProduct (IdRequest) returns (Reply);             // e (eliminar)
+		  rpc GetSalesByCustomer (Empty) returns (SalesSummaryList);  // d
+		  rpc GetProductsPage (PageRequest) returns (ProductPage);   // f
+		  rpc Login (LoginRequest) returns (AuthResponse);           // g
 		}
